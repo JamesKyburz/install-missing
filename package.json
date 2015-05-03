@@ -1,0 +1,20 @@
+{
+  "name": "install-missing",
+  "description": "install latest missing modules",
+  "keywords": "npm install missing",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/jameskyburz/install-missing.git"
+  },
+  "author": {
+    "name": "James Kyburz",
+    "email": "james.kyburz@gmail.com"
+  },
+  "bin": "cli.js",
+  "version": "1.0.0",
+  "dependencies": {
+    "dependency-check": "^2.4.0",
+    "win-spawn": "^2.0.0"
+  },
+  "license": "MIT"
+}
