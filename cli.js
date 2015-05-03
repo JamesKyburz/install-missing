@@ -2,7 +2,7 @@
 var dependencyCheck = require('dependency-check')
 var spawn = require('win-spawn')
 
-dependencyCheck({path: process.cwd()}, missing)
+dependencyCheck({path: process.cwd(), entries: process.argv.slice(2)}, missing)
 
 function missing (err, installed) {
   if (err) return console.error(err)
