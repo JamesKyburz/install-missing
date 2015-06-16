@@ -1,8 +1,13 @@
 #!/usr/bin/env node
 var dependencyCheck = require('dependency-check')
 var spawn = require('win-spawn')
+var fs = require('fs')
+var package = process.cwd() + '/package.json'
 
-dependencyCheck({path: process.cwd(), entries: process.argv.slice(2)}, missing)
+fs.stat(package, function exists (err) {
+  if (err) fs.writeFileSync(package, '{}')
+  dependencyCheck({path: process.cwd(), entries: process.argv.slice(2)}, missing)
+})
 
 function missing (err, installed) {
   if (err) return console.error(err)
