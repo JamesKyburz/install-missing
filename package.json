@@ -13,8 +13,8 @@
   "bin": "cli.js",
   "version": "1.1.1",
   "dependencies": {
-    "dependency-check": "^2.4.0",
-    "win-spawn": "^2.0.0"
+    "dependency-check": "2.5.1",
+    "win-spawn": "2.0.0"
   },
   "license": "MIT"
 }
