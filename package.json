@@ -1,7 +1,7 @@
 {
   "name": "install-missing",
   "description": "install latest missing modules",
-  "keywords": "npm install missing",
+  "keywords": "npm install missing package.json resolve",
   "repository": {
     "type": "git",
     "url": "git://github.com/jameskyburz/install-missing.git"
