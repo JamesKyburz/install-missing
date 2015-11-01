@@ -1,14 +1,19 @@
 # install-missing
 
-installs missing modules and saves as `dependencies` in `package.json`
+No more typing ```npm install```
 
-*Intended for the lazy developer who will now need edit devDependencies manually ;)*
+This module finds out the modules needed to be installed and saves to
+`package.json`
+
+*Intended for the lazy developer
 
 # usage
-
-``` sh
-install-missing
 ```
+Usage: install-missing [file] default is entry file in package.json
+```
+
+The default argument sent to npm install is ```--save```, 
+to change this set ```NPM_ARGS```
 
 # install
 

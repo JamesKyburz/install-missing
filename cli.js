@@ -2,10 +2,10 @@
 var dependencyCheck = require('dependency-check')
 var spawn = require('win-spawn')
 var fs = require('fs')
-var package = process.cwd() + '/package.json'
+var packageJson = process.cwd() + '/package.json'
 
-fs.stat(package, function exists (err) {
-  if (err) fs.writeFileSync(package, '{}')
+fs.stat(packageJson, function exists (err) {
+  if (err) fs.writeFileSync(packageJson, '{}')
   dependencyCheck({path: process.cwd(), entries: process.argv.slice(2)}, missing)
 })
 
@@ -18,7 +18,8 @@ function install (modules) {
   if (!modules.length) return console.log('all modules installed')
   console.log('installing missing modules', modules)
   modules.unshift('install')
-  modules.push('-S')
+  var npmArgs = process.env.NPM_ARGS || '-S'
+  modules.push(npmArgs)
   var proc = spawn('npm', modules, {stdio: 'inherit', cwd: process.cwd()})
   proc.on('exit', exit)
 

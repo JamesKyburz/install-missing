@@ -10,6 +10,9 @@
     "name": "James Kyburz",
     "email": "james.kyburz@gmail.com"
   },
+  "scripts": {
+    "prepublish": "standard"
+  },
   "bin": "cli.js",
   "version": "1.1.1",
   "dependencies": {
