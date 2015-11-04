@@ -2,6 +2,8 @@
 
 No more typing ```npm install```
 
+[![js-standard-style](https://cdn.rawgit.com/feross/standard/master/badge.svg)](https://github.com/feross/standard)
+
 This module finds out the modules needed to be installed and saves to
 `package.json`
 
