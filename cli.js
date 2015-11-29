@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 var dependencyCheck = require('dependency-check')
-var spawn = require('win-spawn')
+var spawn = require('cross-spawn')
 var fs = require('fs')
 var packageJson = process.cwd() + '/package.json'
 
