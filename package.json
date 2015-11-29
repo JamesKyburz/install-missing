@@ -19,5 +19,8 @@
     "cross-spawn": "2.0.1",
     "dependency-check": "2.5.1"
   },
+  "devDependencies": {
+    "standard": "5.4.1"
+  },
   "license": "MIT"
 }
