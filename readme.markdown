@@ -17,6 +17,8 @@ Usage: install-missing [file] default is entry file in package.json
 The default argument sent to npm install is ```--save```, 
 to change this set ```NPM_ARGS```
 
+To exclude electron builtin modules run command with ```ELECTRON=true``` set
+
 # install
 
 With [npm](https://npmjs.org) do:

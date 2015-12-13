@@ -3,6 +3,7 @@ var dependencyCheck = require('dependency-check')
 var spawn = require('cross-spawn')
 var fs = require('fs')
 var packageJson = process.cwd() + '/package.json'
+var electronBuiltins = require('./electron_builtins.js')
 
 fs.stat(packageJson, function exists (err) {
   if (err) fs.writeFileSync(packageJson, '{}')
@@ -15,11 +16,12 @@ function missing (err, installed) {
 }
 
 function install (modules) {
+  var npmArgs = process.env.NPM_ARGS || '-S'
+  if (process.env.ELECTRON) modules = modules.filter(function (x) { return electronBuiltins.indexOf(x) === -1 })
   if (!modules.length) return console.log('all modules installed')
   console.log('installing missing modules', modules)
-  modules.unshift('install')
-  var npmArgs = process.env.NPM_ARGS || '-S'
   modules.push(npmArgs)
+  modules.unshift('install')
   var proc = spawn('npm', modules, {stdio: 'inherit', cwd: process.cwd()})
   proc.on('exit', exit)
 
