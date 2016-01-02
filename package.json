@@ -16,7 +16,7 @@
   "bin": "cli.js",
   "version": "1.1.7",
   "dependencies": {
-    "cross-spawn": "2.1.0",
+    "cross-spawn": "2.1.1",
     "dependency-check": "2.5.1"
   },
   "devDependencies": {
