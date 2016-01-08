@@ -7,11 +7,26 @@ No more typing ```npm install```
 This module finds out the modules needed to be installed and saves to
 `package.json`
 
-*Intended for the lazy developer
+*Intended for the lazy developer*
 
-# usage
+If `package.json` is missing it will be created with `{}`
+
+# cli usage
 ```
-Usage: install-missing [file] default is entry file in package.json
+install-missing [file] default is entry file in package.json
+```
+
+# browserify plugin
+```
+browserify -p $(which install-missing)
+```
+
+or
+
+use with [hihat](https://github.com/Jam3/hihat)
+
+```
+hihat  index.js -- -p $(which install-missing)
 ```
 
 The default argument sent to npm install is ```--save```, 
