@@ -1,7 +1,15 @@
 {
   "name": "install-missing",
   "description": "install latest missing modules",
-  "keywords": "npm install missing package.json resolve",
+  "keywords": [
+    "install",
+    "package.json",
+    "npm",
+    "browserify",
+    "browserify-plugin",
+    "requirebin",
+    "bootstrap"
+  ],
   "repository": {
     "type": "git",
     "url": "git://github.com/jameskyburz/install-missing.git"
