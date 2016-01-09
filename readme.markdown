@@ -17,6 +17,9 @@ install-missing [file] default is entry file in package.json
 ```
 
 # browserify plugin
+
+This will allow you to browserify uninstalled modules!
+
 ```
 browserify -p $(which install-missing)
 ```
