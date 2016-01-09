@@ -9,6 +9,9 @@ This module finds out the modules needed to be installed and saves to
 
 *Intended for the lazy developer*
 
+When paired with [hihat] it gives you a
+[requirebin] like experience!
+
 If `package.json` is missing it will be created with `{}`
 
 # video
@@ -30,7 +33,7 @@ browserify -p $(which install-missing)
 
 or
 
-use with [hihat](https://github.com/Jam3/hihat)
+use with [hihat]
 
 ```
 hihat  index.js -- -p $(which install-missing)
@@ -43,7 +46,7 @@ To exclude electron builtin modules run command with ```ELECTRON=true``` set
 
 # install
 
-With [npm](https://npmjs.org) do:
+With [npm] do:
 
 ```
 npm install -g install-missing
@@ -52,3 +55,7 @@ npm install -g install-missing
 # license
 
 MIT
+
+[hihat]:https://github.com/Jam3/hihat
+[requirebin]:http://requirebin.com
+[npm]:https://npmjs.org
