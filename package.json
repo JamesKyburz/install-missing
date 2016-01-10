@@ -23,7 +23,7 @@
   },
   "bin": "cli.js",
   "main": "cli.js",
-  "version": "1.1.13",
+  "version": "1.1.14",
   "dependencies": {
     "cross-spawn": "2.1.4",
     "dependency-check": "2.5.1",
