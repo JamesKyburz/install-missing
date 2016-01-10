@@ -11,10 +11,14 @@ if (!module.parent) {
   installMissing()
 } else {
   module.exports = function (browserify, options) {
+    browserify.on('file', function (file) {
+      if (/node_modules/.test(file)) return
+      installMissingFile(file)
+    })
     browserify.pipeline.get('deps').unshift(through.obj(function record (deps, enc, next) {
       this.push(deps)
       if (deps.entry) {
-        installMissing(path.relative(__dirname, deps.file), next)
+        installMissingFile(deps.file, next)
       } else {
         next()
       }
@@ -22,13 +26,18 @@ if (!module.parent) {
   }
 }
 
+function noop () {}
+
+function installMissingFile (file, next) {
+  next = next || noop
+  installMissing(path.relative(__dirname, file), next)
+}
+
 function installMissing (entries, cb) {
   fs.stat(packageJson, function exists (err) {
     if (err) fs.writeFileSync(packageJson, '{}')
     dependencyCheck({path: process.cwd(), entries: entries || process.argv.slice(2)}, missing)
   })
-
-  function noop () {}
 
   var log = {
     info: cb ? noop : console.log.bind(console),
