@@ -27,7 +27,7 @@
   "dependencies": {
     "cross-spawn": "2.1.5",
     "dependency-check": "2.5.1",
-    "through2": "2.0.0"
+    "through2": "2.0.1"
   },
   "devDependencies": {
     "standard": "6.0.4"
