@@ -30,7 +30,7 @@
     "through2": "2.0.1"
   },
   "devDependencies": {
-    "standard": "6.0.4"
+    "standard": "6.0.5"
   },
   "license": "MIT"
 }
