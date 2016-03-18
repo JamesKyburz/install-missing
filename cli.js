@@ -34,9 +34,10 @@ function installMissingFile (file, next) {
 }
 
 function installMissing (entries, cb) {
+  var entries = entries || process.argv.slice(2)[0]
   fs.stat(packageJson, function exists (err) {
     if (err) fs.writeFileSync(packageJson, '{}')
-    dependencyCheck({path: process.cwd(), entries: entries || process.argv.slice(2)}, missing)
+    dependencyCheck({ path: process.cwd(), entries: entries, noDefaultEntries: !!entries }, missing)
   })
 
   var log = {
