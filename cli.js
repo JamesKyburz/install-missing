@@ -30,7 +30,7 @@ function noop () {}
 
 function installMissingFile (file, next) {
   next = next || noop
-  installMissing(path.relative(__dirname, file), next)
+  installMissing(path.relative(process.cwd(), file), next)
 }
 
 function installMissing (entries, cb) {
