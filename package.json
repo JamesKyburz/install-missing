@@ -25,7 +25,7 @@
   "main": "cli.js",
   "version": "1.1.19",
   "dependencies": {
-    "cross-spawn": "2.2.2",
+    "cross-spawn": "2.2.3",
     "dependency-check": "2.5.1",
     "through2": "2.0.1"
   },
