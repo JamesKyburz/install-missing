@@ -58,10 +58,22 @@ function installMissing (entries, cb) {
       log.error(err)
       return cb(err)
     }
-    install(dependencyCheck.missing(installed.package, installed.used))
+    var pending = 2
+    install(dependencyCheck.missing(installed.package, installed.used), done)
+    uninstall(dependencyCheck.extra(installed.package, installed.used), done)
+
+    function done (err) {
+      if (err) {
+        return cb(err)
+      } else {
+        pending--
+        if (!pending) cb(err)
+      }
+    }
   }
 
-  function install (modules) {
+  function install (modules, cb) {
+    modules = modules.slice()
     var npmArgs = process.env.NPM_ARGS || '-S'
     if (process.env.ELECTRON) modules = modules.filter(function (x) { return electronBuiltins.indexOf(x) === -1 })
     if (!modules.length) {
@@ -78,6 +90,23 @@ function installMissing (entries, cb) {
       var error = code === 0 ? null : ('npm install failed ' + code)
       if (error) log.error(error)
       log.info('installed and saved to package.json as dependencies')
+      cb(error)
+    }
+  }
+
+  function uninstall (modules, cb) {
+    modules = modules.slice()
+    var npmArgs = process.env.NPM_ARGS || '-S'
+    if (process.env.ELECTRON) modules = modules.filter(function (x) { return electronBuiltins.indexOf(x) === -1 })
+    modules.push(npmArgs)
+    modules.unshift('uninstall')
+    var proc = spawn('npm', modules, npmOptions)
+    proc.on('exit', exit)
+
+    function exit (code) {
+      var error = code === 0 ? null : ('npm uninstall failed ' + code)
+      if (error) log.error(error)
+      log.info('uninstalled and saved to package.json as dependencies')
       cb(error)
     }
   }
