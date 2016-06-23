@@ -60,7 +60,7 @@ function installMissing (entries, cb) {
     }
     var pending = 2
     install(dependencyCheck.missing(installed.package, installed.used), done)
-    uninstall(dependencyCheck.extra(installed.package, installed.used), done)
+    uninstall(dependencyCheck.extra(installed.package, installed.used, { excludeDev: true }), done)
 
     function done (err) {
       if (err) {
