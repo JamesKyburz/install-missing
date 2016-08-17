@@ -98,8 +98,10 @@ function installMissing (entries, cb) {
     modules = modules.slice()
     var npmArgs = process.env.NPM_ARGS || '-S'
     if (process.env.ELECTRON) modules = modules.filter(function (x) { return electronBuiltins.indexOf(x) === -1 })
+    if (!modules.length) return cb()
     modules.push(npmArgs)
     modules.unshift('uninstall')
+    log.info('uninstalling missing modules', modules)
     var proc = spawn('npm', modules, npmOptions)
     proc.on('exit', exit)
 
