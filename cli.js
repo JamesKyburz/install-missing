@@ -11,17 +11,12 @@ if (!module.parent) {
   installMissing()
 } else {
   module.exports = function (browserify, options) {
-    browserify.on('file', function (file) {
-      if (/node_modules/.test(file)) return
-      installMissingFile(file)
-    })
+    var first = true
     browserify.pipeline.get('deps').unshift(through.obj(function record (deps, enc, next) {
       this.push(deps)
-      if (deps.entry) {
-        installMissingFile(deps.file, next)
-      } else {
-        next()
-      }
+      if (!first) return next()
+      installMissingFile(deps.file, next)
+      first = false
     }))
   }
 }
@@ -29,7 +24,6 @@ if (!module.parent) {
 function noop () {}
 
 function installMissingFile (file, next) {
-  next = next || noop
   installMissing(path.relative(process.cwd(), file), next)
 }
 
