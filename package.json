@@ -22,8 +22,8 @@
     "prepublish": "standard",
     "preversion": "standard"
   },
-  "bin": "cli.js",
-  "main": "cli.js",
+  "bin": "index.js",
+  "main": "index.js",
   "version": "1.1.30",
   "dependencies": {
     "cross-spawn": "4.0.0",
