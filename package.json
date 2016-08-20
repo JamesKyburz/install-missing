@@ -19,7 +19,8 @@
     "email": "james.kyburz@gmail.com"
   },
   "scripts": {
-    "prepublish": "standard"
+    "prepublish": "standard",
+    "preversion": "standard"
   },
   "bin": "cli.js",
   "main": "cli.js",
