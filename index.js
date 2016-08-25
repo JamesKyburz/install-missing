@@ -6,6 +6,7 @@ var packageJson = process.cwd() + '/package.json'
 var electronBuiltins = require('./electron_builtins.js')
 var path = require('path')
 var through = require('through2')
+var debug = require('debug')
 
 if (!module.parent) {
   installMissing(process.argv.slice(2)[0])
@@ -30,9 +31,12 @@ function installMissing (file, cb) {
   })
 
   var log = {
-    info: cb ? noop : console.log.bind(console),
-    error: cb ? noop : console.error.bind(console)
+    info: debug('install-missing:info'),
+    error: debug('install-missing:error')
   }
+
+  log.info.log = console.log.bind(console)
+  log.error.log = console.error.bind(console)
 
   var npmOptions = {
     cwd: process.cwd(),
