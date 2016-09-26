@@ -25,11 +25,13 @@
   "bin": "index.js",
   "main": "index.js",
   "version": "1.1.33",
+  "files": ["index.js"],
   "dependencies": {
     "cross-spawn": "4.0.2",
     "debug": "2.2.0",
     "dependency-check": "2.6.0",
     "pkg-config": "1.1.1",
+    "rimraf": "2.5.4",
     "through2": "2.0.1",
     "uuid": "2.0.3"
   },
