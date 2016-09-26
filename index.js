@@ -3,22 +3,38 @@ var dependencyCheck = require('dependency-check')
 var spawn = require('cross-spawn')
 var fs = require('fs')
 var packageJson = process.cwd() + '/package.json'
-var electronBuiltins = require('./electron_builtins.js')
 var path = require('path')
 var through = require('through2')
+var uuid = require('uuid')
 var debug = require('debug')
+var rimraf = require('rimraf')
+var pkgConfig = require('pkg-config')
+
+var ignore = (pkgConfig('install-missing', { root: false, cwd: process.cwd() }) || { ignore: [] }).ignore
 
 if (!module.parent) {
   installMissing(process.argv.slice(2)[0])
 } else {
-  module.exports = function (browserify, options) {
-    var first = true
-    browserify.pipeline.get('deps').unshift(through.obj(function record (deps, enc, next) {
-      this.push(deps)
-      if (!first) return next()
-      installMissing(path.relative(process.cwd(), deps.file), next)
-      first = false
-    }))
+  var first = true
+  module.exports = function (file, opts) {
+    if (first) {
+      var tmp = path.join(process.cwd(), `${uuid.v4().js}`)
+      var out = fs.createWriteStream(tmp)
+      return through(write, end)
+    } else {
+      return through()
+    }
+    function write (chunk, enc, cb) {
+      this.push(chunk)
+      out.write(chunk)
+      cb()
+    }
+
+    function end (cb) {
+      installMissing(path.relative(process.cwd(), tmp), function () {
+        rimraf(tmp, cb)
+      })
+    }
   }
 }
 
@@ -67,7 +83,6 @@ function installMissing (file, cb) {
   function install (modules, cb) {
     modules = modules.slice()
     var npmArgs = process.env.NPM_ARGS || '-S'
-    if (process.env.ELECTRON) modules = modules.filter(function (x) { return electronBuiltins.indexOf(x) === -1 })
     if (!modules.length) {
       log.info('all modules installed')
       return cb()
@@ -89,7 +104,7 @@ function installMissing (file, cb) {
   function uninstall (modules, cb) {
     modules = modules.slice()
     var npmArgs = process.env.NPM_ARGS || '-S'
-    if (process.env.ELECTRON) modules = modules.filter(function (x) { return electronBuiltins.indexOf(x) === -1 })
+    modules = modules.filter(function (x) { return ignore.indexOf(x) === -1 })
     if (!modules.length) return cb()
     modules.push(npmArgs)
     log.info('uninstalling missing modules', modules)
