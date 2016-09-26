@@ -10,17 +10,18 @@ var debug = require('debug')
 var rimraf = require('rimraf')
 var pkgConfig = require('pkg-config')
 
-var ignore = (pkgConfig('install-missing', { root: false, cwd: process.cwd() }) || { ignore: [] }).ignore
+var leave = (pkgConfig('install-missing', { root: false, cwd: process.cwd() }) || { leave: [] }).leave
 
 if (!module.parent) {
   var file = process.argv.slice(2)[0]
+  var basedir = process.argv.slice(2)[1]
   if (file === '-') {
-    var tmp = path.join(process.cwd(), `${uuid.v4()}.js`)
+    var tmp = path.join(process.cwd(), basedir, `${uuid.v4()}.js`)
     var out = fs.createWriteStream(tmp)
     process.stdin.pipe(out)
     process.stdin.resume()
     out.on('finish', function () {
-      installMissing(path.relative(process.cwd(), path.basename(tmp)), function () {
+      installMissing(path.relative(process.cwd(), tmp), function () {
         rimraf(tmp, noop)
       })
     })
@@ -54,11 +55,6 @@ if (!module.parent) {
 function noop () {}
 
 function installMissing (file, cb) {
-  fs.stat(packageJson, function exists (err) {
-    if (err) fs.writeFileSync(packageJson, '{}')
-    dependencyCheck({ path: process.cwd(), entries: file, noDefaultEntries: !!file }, missing)
-  })
-
   var log = {
     info: debug('install-missing:info'),
     error: debug('install-missing:error')
@@ -66,6 +62,12 @@ function installMissing (file, cb) {
 
   log.info.log = console.log.bind(console)
   log.error.log = console.error.bind(console)
+
+  log.info(`install-missing ${file}`)
+  fs.stat(packageJson, function exists (err) {
+    if (err) fs.writeFileSync(packageJson, '{}')
+    dependencyCheck({ path: process.cwd(), entries: file, noDefaultEntries: !!file }, missing)
+  })
 
   var npmOptions = {
     cwd: process.cwd(),
@@ -119,7 +121,7 @@ function installMissing (file, cb) {
 
   function uninstall (modules, cb) {
     modules = modules.slice()
-    modules = modules.filter(function (x) { return ignore.indexOf(x) === -1 })
+    modules = modules.filter(function (x) { return leave.indexOf(x) === -1 })
     if (!modules.length) return cb()
     fs.readFile(packageJson, function (err, data) {
       if (err) {
