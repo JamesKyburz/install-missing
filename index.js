@@ -77,21 +77,15 @@ function installMissing (file, cb) {
   cb = cb || noop
 
   function missing (err, installed) {
-    if (err) {
-      log.error(err)
-      return cb(err)
-    }
+    if (assertError(err, cb)) return
     var pending = 2
     install(dependencyCheck.missing(installed.package, installed.used), done)
     uninstall(dependencyCheck.extra(installed.package, installed.used, { excludeDev: true }), done)
 
     function done (err) {
-      if (err) {
-        return cb(err)
-      } else {
-        pending--
-        if (!pending) cb(err)
-      }
+      if (assertError(err, cb)) return
+      pending--
+      if (!pending) cb(null)
     }
   }
 
@@ -109,13 +103,10 @@ function installMissing (file, cb) {
     proc.on('exit', exit)
 
     function exit (code) {
-      var error = code === 0 ? null : ('npm install failed ' + code)
-      if (error) {
-        log.error(error)
-      } else {
-        log.info('installed and saved to package.json as dependencies')
-      }
-      cb(error)
+      var err = code === 0 ? null : ('npm install failed ' + code)
+      if (assertError(err, cb)) return
+      log.info('installed and saved to package.json as dependencies')
+      cb(null)
     }
   }
 
@@ -124,22 +115,24 @@ function installMissing (file, cb) {
     modules = modules.filter(function (x) { return leave.indexOf(x) === -1 })
     if (!modules.length) return cb()
     fs.readFile(packageJson, function (err, data) {
-      if (err) {
-        log.error(err)
-        return cb(err)
-      }
+      if (assertError(err, cb)) return
       var json = JSON.parse(data)
       modules.forEach(function (module) {
         if (json.dependencies) delete json.dependencies[module]
       })
       fs.writeFile(packageJson, JSON.stringify(json, null, 2), function (err) {
-        if (err) {
-          log.error(err)
-        } else {
-          log.info('removed dependencies from package.json')
-        }
+        if (assertError(err, cb)) return
+        log.info('removed dependencies from package.json')
         cb(err)
       })
     })
+  }
+
+  function assertError (err, cb) {
+    if (err) {
+      log.error(err)
+      cb(err)
+    }
+    return !!err
   }
 }
