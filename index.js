@@ -20,8 +20,8 @@ if (!module.parent) {
     var out = fs.createWriteStream(tmp)
     process.stdin.pipe(out)
     process.stdin.resume()
-    out.on('finish', function () {
-      installMissing(path.relative(process.cwd(), tmp), function () {
+    out.on('finish', () => {
+      installMissing(path.relative(process.cwd(), tmp), () => {
         rimraf(tmp, noop)
       })
     })
@@ -30,7 +30,7 @@ if (!module.parent) {
   }
 } else {
   var first = true
-  module.exports = function (file, opts) {
+  module.exports = (file, opts) => {
     if (first) {
       var tmp = path.join(process.cwd(), `${uuid.v4()}.js`)
       var out = fs.createWriteStream(tmp)
@@ -45,7 +45,7 @@ if (!module.parent) {
     }
 
     function end (cb) {
-      installMissing(path.relative(process.cwd(), path.basename(tmp)), function () {
+      installMissing(path.relative(process.cwd(), path.basename(tmp)), () => {
         rimraf(tmp, cb)
       })
     }
@@ -64,7 +64,7 @@ function installMissing (file, cb) {
   log.error.log = console.error.bind(console)
 
   log.info(`install-missing ${file}`)
-  fs.stat(packageJson, function exists (err) {
+  fs.stat(packageJson, (err) => {
     if (err) fs.writeFileSync(packageJson, '{}')
     dependencyCheck({ path: process.cwd(), entries: file, noDefaultEntries: !!file }, missing)
   })
@@ -112,15 +112,15 @@ function installMissing (file, cb) {
 
   function uninstall (modules, cb) {
     modules = modules.slice()
-    modules = modules.filter(function (x) { return leave.indexOf(x) === -1 })
+    modules = modules.filter((x) => leave.indexOf(x) === -1)
     if (!modules.length) return cb()
-    fs.readFile(packageJson, function (err, data) {
+    fs.readFile(packageJson, (err, data) => {
       if (assertError(err, cb)) return
       var json = JSON.parse(data)
-      modules.forEach(function (module) {
+      modules.forEach((module) => {
         if (json.dependencies) delete json.dependencies[module]
       })
-      fs.writeFile(packageJson, JSON.stringify(json, null, 2), function (err) {
+      fs.writeFile(packageJson, JSON.stringify(json, null, 2), (err) => {
         if (assertError(err, cb)) return
         log.info('removed dependencies from package.json')
         cb(err)
