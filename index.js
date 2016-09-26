@@ -95,8 +95,11 @@ function installMissing (file, cb) {
 
     function exit (code) {
       var error = code === 0 ? null : ('npm install failed ' + code)
-      if (error) log.error(error)
-      log.info('installed and saved to package.json as dependencies')
+      if (error) {
+        log.error(error)
+      } else {
+        log.info('installed and saved to package.json as dependencies')
+      }
       cb(error)
     }
   }
@@ -117,10 +120,10 @@ function installMissing (file, cb) {
       fs.writeFile(packageJson, JSON.stringify(json, null, 2), function (err) {
         if (err) {
           log.error(err)
-          return cb(err)
+        } else {
+          log.info('removed dependencies from package.json')
         }
-        log.info('removed dependencies from package.json')
-        cb(null)
+        cb(err)
       })
     })
   }
