@@ -13,12 +13,25 @@ var pkgConfig = require('pkg-config')
 var ignore = (pkgConfig('install-missing', { root: false, cwd: process.cwd() }) || { ignore: [] }).ignore
 
 if (!module.parent) {
-  installMissing(process.argv.slice(2)[0])
+  var file = process.argv.slice(2)[0]
+  if (file === '-') {
+    var tmp = path.join(process.cwd(), `${uuid.v4()}.js`)
+    var out = fs.createWriteStream(tmp)
+    process.stdin.pipe(out)
+    process.stdin.resume()
+    out.on('finish', function () {
+      installMissing(path.relative(process.cwd(), path.basename(tmp)), function () {
+        rimraf(tmp, noop)
+      })
+    })
+  } else {
+    installMissing(file)
+  }
 } else {
   var first = true
   module.exports = function (file, opts) {
     if (first) {
-      var tmp = path.join(process.cwd(), `${uuid.v4().js}`)
+      var tmp = path.join(process.cwd(), `${uuid.v4()}.js`)
       var out = fs.createWriteStream(tmp)
       return through(write, end)
     } else {
@@ -31,7 +44,7 @@ if (!module.parent) {
     }
 
     function end (cb) {
-      installMissing(path.relative(process.cwd(), tmp), function () {
+      installMissing(path.relative(process.cwd(), path.basename(tmp)), function () {
         rimraf(tmp, cb)
       })
     }
