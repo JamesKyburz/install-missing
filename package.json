@@ -28,7 +28,7 @@
   "dependencies": {
     "cross-spawn": "5.0.0",
     "debug": "2.6.0",
-    "dependency-check": "2.7.0",
+    "dependency-check": "2.8.0",
     "through2": "2.0.3"
   },
   "devDependencies": {
