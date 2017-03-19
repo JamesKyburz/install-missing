@@ -88,20 +88,21 @@ function installMissing (file, cb) {
 
   function uninstall (modules, cb) {
     modules = modules.slice()
-    var npmArgs = process.env.NPM_ARGS || '-S'
     if (process.env.ELECTRON) modules = modules.filter(function (x) { return electronBuiltins.indexOf(x) === -1 })
     if (!modules.length) return cb()
-    modules.push(npmArgs)
     log.info('uninstalling missing modules', modules)
-    modules.unshift('uninstall')
-    var proc = spawn('npm', modules, npmOptions)
-    proc.on('exit', exit)
 
-    function exit (code) {
-      var error = code === 0 ? null : ('npm uninstall failed ' + code)
-      if (error) log.error(error)
-      log.info('uninstalled and saved to package.json as dependencies')
-      cb(error)
-    }
+    fs.readFile(packageJson, (err, data) => {
+      if (err) return cb(err)
+      var json = JSON.parse(data)
+      modules.forEach((module) => {
+        delete json.dependencies[module]
+      })
+      fs.writeFile(packageJson, JSON.stringify(json, null, 2), (err) => {
+        if (err) return cb(err)
+        log.info('uninstalled and saved to package.json as dependencies')
+        cb(null)
+      })
+    })
   }
 }
